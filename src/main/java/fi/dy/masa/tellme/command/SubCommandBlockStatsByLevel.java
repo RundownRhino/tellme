@@ -36,7 +36,7 @@ import fi.dy.masa.tellme.command.argument.BlockStateCountGroupingArgument;
 import fi.dy.masa.tellme.command.argument.OutputFormatArgument;
 import fi.dy.masa.tellme.command.argument.OutputTypeArgument;
 import fi.dy.masa.tellme.command.argument.StringCollectionArgument;
-import fi.dy.masa.tellme.datadump.JERDYI.JERDIYFileObject;
+import fi.dy.masa.tellme.datadump.JERDYI.JEROreDistributionObject;
 import fi.dy.masa.tellme.util.OutputUtils;
 import fi.dy.masa.tellme.util.chunkprocessor.BlockStatsByLevel;
 import fi.dy.masa.tellme.util.datadump.DataDump;
@@ -70,7 +70,7 @@ public class SubCommandBlockStatsByLevel {
 
         private static int outputJERFile(CommandSource source) {
                 BlockStatsByLevel stats = getBlockStatsByLevelFor(source.getEntity());
-                JERDIYFileObject distribs = stats.generateJERDistribs();
+                List<JEROreDistributionObject> distribs = stats.generateJERDistribs();
                 OutputUtils.printOutput(Arrays.asList(new Gson().toJson(distribs)), OutputType.FILE,
                                 DataDump.Format.ASCII, "world-gen", source);
                 return 1;

@@ -28,7 +28,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.registries.ForgeRegistries;
 import fi.dy.masa.tellme.TellMe;
 import fi.dy.masa.tellme.command.CommandUtils;
-import fi.dy.masa.tellme.datadump.JERDYI.JERDIYFileObject;
 import fi.dy.masa.tellme.datadump.JERDYI.JEROreDistributionObject;
 import fi.dy.masa.tellme.util.BlockInfo;
 import fi.dy.masa.tellme.util.datadump.DataDump;
@@ -339,7 +338,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         }
     }
 
-    public JERDIYFileObject generateJERDistribs() {
+    public List<JEROreDistributionObject> generateJERDistribs() {
         List<JEROreDistributionObject> distributionList = new ArrayList<>();
         HashMap<Integer, Long> areas = getAreaScannedByLevel();
         blockStats.forEach((state, stats) -> {
@@ -371,7 +370,6 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
                     dim);
             distributionList.add(finalDist);
         });
-        JERDIYFileObject distribs = new JERDIYFileObject(distributionList);
-        return distribs;
+        return distributionList;
     }
 }

@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class JEROreDistributionObject {
     private String block;
-    private String distri;
+    private String distrib;
     private boolean silktouch;
     private List<DropObject> dropsList;
     private String dim;
@@ -39,10 +39,10 @@ public class JEROreDistributionObject {
         }
     }
 
-    public JEROreDistributionObject(String block, String distri, boolean silktouch, List<DropObject> dropsList,
+    public JEROreDistributionObject(String block, String distrib, boolean silktouch, List<DropObject> dropsList,
             String dim) {
         this.block = block;
-        this.distri = distri;
+        this.distrib = distrib;
         this.silktouch = silktouch;
         this.dropsList = dropsList;
         this.dim = dim;
