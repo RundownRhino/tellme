@@ -72,15 +72,11 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
                     for (int x = xMin; x <= xMax; ++x) {
                         pos.setPos(x, y, z);
                         BlockState state = chunk.getBlockState(pos);
-                        BlockStateCountByLevel inner_map;
-                        if (blockStats.containsKey(state)) {
-                            inner_map = blockStats.get(state);
-                        } else {
-                            final Block block = state.getBlock();
+                        BlockStateCountByLevel inner_map = blockStats.computeIfAbsent(state, k -> {
+                            final Block block = k.getBlock();
                             final ResourceLocation id = ForgeRegistries.BLOCKS.getKey(block);
-                            inner_map = new BlockStateCountByLevel(state, id, new HashMap<Integer, Long>());
-                            blockStats.put(state, inner_map);
-                        }
+                            return new BlockStateCountByLevel(k, id, new HashMap<Integer, Long>());
+                        });
                         inner_map.addToCount(y, 1);
                         count++;
                     }
@@ -269,8 +265,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
 
         public void addAnother(HashMap<Integer, Long> counts2) {
             // Add up the counts at each level.
-            counts2.forEach((k, v) -> counts.merge(k, v, Long::sum));
-            recalculateTotal();
+            counts2.forEach((level, amount) -> addToCount(level, amount));
         }
 
         private void recalculateTotal() {
@@ -282,7 +277,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         }
 
         public void addToCount(int level, long amount) {
-            this.counts.put(level, this.counts.getOrDefault(level, 0l) + amount);
+            this.counts.merge(level, amount, Long::sum);
             this.total_count += amount;
         }
 
@@ -364,7 +359,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
                     if (freq > 1.0) {
                         System.err.println(
                                 "[generateJERDistribs]Something's wrong: found an y-level with more blocks than area. Block:"
-                                        + name + ", y-level:" + y + ", count:" + count + ",area:" + area + ".");
+                                        + name + ", y-level:" + y + ", count:" + count + ", area:" + area + ".");
                     }
                 }
 
