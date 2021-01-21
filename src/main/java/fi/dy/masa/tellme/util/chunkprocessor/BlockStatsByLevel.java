@@ -338,7 +338,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
 
     public List<JEROreDistributionObject> generateJERDistribs() {
         List<JEROreDistributionObject> distributionList = new ArrayList<>();
-        HashMap<Integer, Long> areas = getAreaScannedByLevel();
+        final HashMap<Integer, Long> areas = getAreaScannedByLevel();
         blockStats.forEach((state, stats) -> {
             String name = stats.registryName;
             StringBuilder distrib = new StringBuilder();
