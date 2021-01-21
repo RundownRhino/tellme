@@ -56,6 +56,9 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         final BlockState air = Blocks.AIR.getDefaultState();
         int count = 0;
         HashMap<Integer, Long> areasOnEachLevelThisProcess = new HashMap<>();
+        if(!this.append){
+            this.blockStats.clear();
+        }
         for (Chunk chunk : chunks) {
             ChunkPos chunkPos = chunk.getPos();
             final int topY = chunk.getTopFilledSegment() + 15;
@@ -67,7 +70,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             final int zMax = Math.min((chunkPos.z << 4) + 15, posMax.getZ());
             for (int y = yMin; y <= yMax; ++y) {
                 long area = ((long) zMax - zMin + 1) * (xMax - xMin + 1);
-                areasOnEachLevelThisProcess.merge(y, area, (oldarea, newarea) -> oldarea + newarea);
+                areasOnEachLevelThisProcess.merge(y, area, Long::sum);
                 for (int z = zMin; z <= zMax; ++z) {
                     for (int x = xMin; x <= xMax; ++x) {
                         pos.setPos(x, y, z);
