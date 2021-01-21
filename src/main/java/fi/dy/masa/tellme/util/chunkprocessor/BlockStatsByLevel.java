@@ -55,8 +55,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         final BlockState air = Blocks.AIR.getDefaultState();
         int count = 0;
-        HashMap<Integer, Long> areasOnEachLevelThisProcess = new HashMap<>();
-        if(!this.append){
+        if (!this.append) {
             this.blockStats.clear();
         }
         for (Chunk chunk : chunks) {
@@ -69,8 +68,6 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             final int yMax = Math.min(topY, posMax.getY());
             final int zMax = Math.min((chunkPos.z << 4) + 15, posMax.getZ());
             for (int y = yMin; y <= yMax; ++y) {
-                long area = ((long) zMax - zMin + 1) * (xMax - xMin + 1);
-                areasOnEachLevelThisProcess.merge(y, area, Long::sum);
                 for (int z = zMin; z <= zMax; ++z) {
                     for (int x = xMin; x <= xMax; ++x) {
                         pos.setPos(x, y, z);
@@ -95,9 +92,10 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             // (zMax - zMin + 1));
             // }
         }
-        areasOnEachLevelThisProcess.forEach((y, area) -> {
+        long area = ((long) posMax.getZ() - posMin.getZ() + 1) * (posMax.getX() - posMin.getX() + 1);
+        for (int y = Math.max(posMin.getY(), 0); y <= Math.min(posMax.getY(), 255); y++) {
             areaScannedByLevel.merge(y, area, (oldarea, newarea) -> append ? oldarea + newarea : newarea);
-        });
+        }
         this.chunkCount = this.append ? this.chunkCount + chunks.size() : chunks.size();
 
         TellMe.logger.info(String.format(Locale.US, "Counted %d blocks in %d chunks in %.4f seconds.", count,
