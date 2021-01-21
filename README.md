@@ -3,7 +3,7 @@ After 1.12, Just Enough Resources removed the capability to profile worlds to ge
 
 This is a fork of TellMe butchered by me to implement two additional commands, allowing to scan the world for blocks (keeping track of the number of each kind on each y-level) and generating JER-compatible `world-gen.json` files from it. **It is not meant to be used for anything else**. I also don't see a reason to make a PR to the parent repo, as the code quality in my fork is rather atrocious. However, **if you're a modpack developer for looking to include JER oredistribution graphs in your modpack**, this tool was made for you.
 
-#Instructions
+# Instructions
 1. Put the mod's jar (see Releases, or compile from source) into the `mods` folder. You'll also want a way to efficiently pregenerate the world, like [Chunk Pregenerator](https://www.curseforge.com/minecraft/mc-mods/chunkpregenerator).
 2. Make a new world. Pregenerate a large area around the world origin - for example, `/pregen start gen radius pregentheworld SQUARE 0 0 34` to pregenerate a square a bit bigger than 64 chunks at a side. This will take multiple minutes (the GUI will show progress).
 3. Use the command `/tellme block-stats-by-level count area -512 -512 511 511` to scan a 1024x1024 block area around the world origin. This will take a few minutes, and will print a message when done.
