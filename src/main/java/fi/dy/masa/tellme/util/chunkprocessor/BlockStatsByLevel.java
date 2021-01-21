@@ -55,7 +55,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         BlockPos.Mutable pos = new BlockPos.Mutable();
         final BlockState air = Blocks.AIR.getDefaultState();
         int count = 0;
-
+        HashMap<Integer, Long> areasOnEachLevelThisProcess = new HashMap<>();
         for (Chunk chunk : chunks) {
             ChunkPos chunkPos = chunk.getPos();
             final int topY = chunk.getTopFilledSegment() + 15;
@@ -67,7 +67,7 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             final int zMax = Math.min((chunkPos.z << 4) + 15, posMax.getZ());
             for (int y = yMin; y <= yMax; ++y) {
                 long area = ((long) zMax - zMin + 1) * (xMax - xMin + 1);
-                areaScannedByLevel.merge(y, area, (oldarea, newarea) -> append ? oldarea + newarea : newarea);
+                areasOnEachLevelThisProcess.merge(y, area, (oldarea, newarea) -> oldarea + newarea);
                 for (int z = zMin; z <= zMax; ++z) {
                     for (int x = xMin; x <= xMax; ++x) {
                         pos.setPos(x, y, z);
@@ -96,7 +96,9 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             // (zMax - zMin + 1));
             // }
         }
-
+        areasOnEachLevelThisProcess.forEach((y, area) -> {
+            areaScannedByLevel.merge(y, area, (oldarea, newarea) -> append ? oldarea + newarea : newarea);
+        });
         this.chunkCount = this.append ? this.chunkCount + chunks.size() : chunks.size();
 
         TellMe.logger.info(String.format(Locale.US, "Counted %d blocks in %d chunks in %.4f seconds.", count,
@@ -359,6 +361,11 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
                     }
                 } else {
                     freq = (double) count / (double) area;
+                    if (freq > 1.0) {
+                        System.err.println(
+                                "[generateJERDistribs]Something's wrong: found an y-level with more blocks than area. Block:"
+                                        + name + ", y-level:" + y + ", count:" + count + ",area:" + area + ".");
+                    }
                 }
 
                 distrib.append(y + "," + freq + ";");
