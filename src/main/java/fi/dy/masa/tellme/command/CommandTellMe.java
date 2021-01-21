@@ -47,6 +47,7 @@ public class CommandTellMe
                     .then(SubCommandBiomeLocate.registerSubCommand(dispatcher))
                     .then(SubCommandBiomeStats.registerSubCommand(dispatcher))
                     .then(SubCommandBlockStats.registerSubCommand(dispatcher))
+                    .then(SubCommandBlockStatsByLevel.registerSubCommand(dispatcher))
                     .then(SubCommandCopyToClipboard.registerSubCommand(dispatcher))
                     .then(SubCommandDump.registerSubCommand(dispatcher))
                     .then(SubCommandDumpJson.registerSubCommand(dispatcher))
