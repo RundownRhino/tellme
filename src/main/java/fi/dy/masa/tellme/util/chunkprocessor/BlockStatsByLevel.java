@@ -345,24 +345,22 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
             String name = stats.registryName;
             StringBuilder distrib = new StringBuilder();
             HashMap<Integer, Long> counts = stats.getCounts();
-            int min_y = counts.keySet().stream().reduce(Integer.MAX_VALUE, Integer::min);
-            int max_y = counts.keySet().stream().reduce(Integer.MIN_VALUE, Integer::max);
-            // double[] freqs = new double[max_y - min_y + 1];
+            int min_y = 0;
+            int max_y = 127; // JER interpolates missing points, so we need the full array.
             for (int y = min_y; y <= max_y; y++) {
-                int pos = y - min_y;
                 long area = areas.get(y);
                 long count = counts.getOrDefault(y, 0l);
+                double freq = 0;
                 if (area == 0) {
-                    if (count == 0) {
-                        continue;
-                    } else {
+                    if (count != 0) {
                         System.err.println(
                                 "[generateJERDistribs]Found a block with nonzero appearances over zero area, ignoring! Block:"
                                         + name + ",y-level:" + y);
-                        continue;
                     }
+                } else {
+                    freq = (double) count / (double) area;
                 }
-                double freq = (double) count / area;
+
                 distrib.append(y + "," + freq + ";");
             }
             String dim = "minecraft:overworld"; // just assuming, FIXME to handle different dimensions later
