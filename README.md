@@ -15,7 +15,9 @@ To profile several dimensions, profile each and then manually merge the resultin
 
 # Current known limitations
 ~~1. Does not currently support anything but Overworld.~~ Fixed in 0.1.1, instructions updated accordingly.
+
 2. The output has no filtering - *every* block that got into the scanned area will be in the output file. You can filter the final file yourself, or I might get around to implementing it later.
+
 3. The chunks are currently loaded all at once before processing. For me, it's possible with some pain to make a scan 4 times as big as the one in the instructions (2048x2048 blocks, or 16 thousand chunks). The scanning takes around 2 minutes (most of it loading the chunks, the counting only takes 23 seconds), but the file output takes 8 minutes (and I don't know why). I might implement a better process in the future that slices the area in parts and processes them in order. For nice, smooth graphs, you probably want a scan of about this size, rather than the one in instructions.
 
 
