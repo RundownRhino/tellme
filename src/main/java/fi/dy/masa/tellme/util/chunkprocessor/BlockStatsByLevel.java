@@ -25,6 +25,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 import fi.dy.masa.tellme.TellMe;
 import fi.dy.masa.tellme.command.CommandUtils;
@@ -336,9 +337,12 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
         }
     }
 
-    public List<JEROreDistributionObject> generateJERDistribs() {
+    public List<JEROreDistributionObject> generateJERDistribs(ServerWorld dim) {
+        final long timeBefore = System.nanoTime();
         List<JEROreDistributionObject> distributionList = new ArrayList<>();
         final HashMap<Integer, Long> areas = getAreaScannedByLevel();
+        String dim_name = dim.getDimensionKey().getLocation().toString();
+        System.out.println("Starting to generate a JER distribution file for dimension: " + dim_name);
         blockStats.forEach((state, stats) -> {
             String name = stats.registryName;
             StringBuilder distrib = new StringBuilder();
@@ -366,11 +370,12 @@ public class BlockStatsByLevel extends ChunkProcessorAllChunks {
 
                 distrib.append(y + "," + freq + ";");
             }
-            String dim = "minecraft:overworld"; // just assuming, FIXME to handle different dimensions later
             JEROreDistributionObject finalDist = new JEROreDistributionObject(name, distrib.toString(), false, null,
-                    dim);
+                    dim_name);
             distributionList.add(finalDist);
         });
+        TellMe.logger.info(String.format(Locale.US, "Finished generating the file in %.4f seconds.",
+                (System.nanoTime() - timeBefore) / 1000000000D));
         return distributionList;
     }
 }

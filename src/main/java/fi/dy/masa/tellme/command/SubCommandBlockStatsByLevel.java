@@ -27,6 +27,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.registries.ForgeRegistries;
 import fi.dy.masa.tellme.TellMe;
 import fi.dy.masa.tellme.command.CommandUtils.AreaType;
@@ -68,9 +69,9 @@ public class SubCommandBlockStatsByLevel {
                 return actionNodeCount;
         }
 
-        private static int outputJERFile(CommandSource source) {
+        private static int outputJERFile(CommandSource source, ServerWorld dim) {
                 BlockStatsByLevel stats = getBlockStatsByLevelFor(source.getEntity());
-                List<JEROreDistributionObject> distribs = stats.generateJERDistribs();
+                List<JEROreDistributionObject> distribs = stats.generateJERDistribs(dim);
                 OutputUtils.printOutput(Arrays.asList(new Gson().toJson(distribs)), OutputType.FILE,
                                 DataDump.Format.ASCII, "world-gen", source);
                 return 1;
@@ -78,8 +79,13 @@ public class SubCommandBlockStatsByLevel {
 
         // tellme create-jer-file
         private static LiteralCommandNode<CommandSource> createJERFileOutputDataNodes() {
-                LiteralCommandNode<CommandSource> actionNodeCreateJERFile = Commands.literal("create-jer-file")
-                                .executes(c -> outputJERFile(c.getSource())).build();
+                LiteralCommandNode<CommandSource> actionNodeCreateJERFile = Commands.literal("create-jer-file").build();
+                ArgumentCommandNode<CommandSource, ResourceLocation> dimension = Commands
+                                .argument("dimension", DimensionArgument.getDimension())
+                                .executes(c -> outputJERFile(c.getSource(),
+                                                DimensionArgument.getDimensionArgument(c, "dimension")))
+                                .build();
+                actionNodeCreateJERFile.addChild(dimension);
                 return actionNodeCreateJERFile;
         }
 
