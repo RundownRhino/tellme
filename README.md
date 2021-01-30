@@ -1,4 +1,7 @@
 # TellMe Fork for generating JER DYI worldgen files
+
+EDIT: As of 31.01.2021, check out [Region Scanner](https://github.com/RundownRhino/RegionScanner/) instead! As a result, this fork is probably not going to get updates.
+
 After 1.12, Just Enough Resources removed the capability to profile worlds to generate `world-gen.json` files. That makes its ore distribution feature essentially useless, as it can only know the vanilla ore distributions. I've decided to spend some time fixing it, and this was the result.
 
 This is a fork of TellMe butchered by me to implement two additional commands, allowing to scan the world for blocks (keeping track of the number of each kind on each y-level) and generating JER-compatible `world-gen.json` files from it. **It is not meant to be used for anything else**. I also don't see a reason to make a PR to the parent repo, as the code quality in my fork is rather atrocious. However, **if you're a modpack developer for looking to include JER oredistribution graphs in your modpack**, this tool was made for you.
